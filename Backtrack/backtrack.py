@@ -17,13 +17,30 @@ class BacktrackSolver:
         self.depth = 0
         self.iterations = 0
 
-    def solve(self):
+    def solve(self, return_n=0, return_unsolvable=False):
+        """ Solve sudoku or return partial results.
+
+        Inputs:
+        return_n : int -- return (solvable) grid with n 0s.
+        return_unsolvable : bool -- return first unsolvable
+            sudoku encountered.
+            You can't enter both return_n and return_unsolvable
+
+        Output:
+        Grid : if return_n specified, partial solution
+               if return_unsolvable, unsovable sudoku
+               else by default solution.
+        """
+        assert return_n == 0 or not return_unsolvable, "Do not specify both"
         while len(self.grid.possibilities) != 0:
             self.iterations += 1
             pos_index = self.grid.index_with_min_pos()
 
             # if cell with no possibilities, go backward
             if len(self.grid.possibilities[pos_index[0]]) == 0:
+                if return_unsolvable:
+                    print(self.grid.grid)
+                    return self.grid.grid
                 self._go_back()
                 continue
 
@@ -35,6 +52,9 @@ class BacktrackSolver:
 
             # if possible actions are forbidden
             if len(pos_actions) == 0:
+                if return_unsolvable:
+                    print(self.grid.grid)
+                    return self.grid.grid
                 self._go_back()
                 continue
 
@@ -42,6 +62,10 @@ class BacktrackSolver:
             self.history.append({chosen_index: chosen_value})
             self.grid.fill_cell(*chosen_index, chosen_value)
             self.depth += 1
+
+        if return_n:
+            for i in range(min(len(self.history), return_n)):
+                self._go_back()
 
         return self.grid.grid
 

@@ -33,6 +33,20 @@ class Grid:
         min_pos = min(self.possibilities.values(), key=len)
         return [k for k, v in self.possibilities.items() if v == min_pos]
 
+    def is_correct(self):
+        for value in range(1, SIZE ** 2 + 1):
+            for i in range(SIZE ** 2):
+                if (self.grid[i, :] == value).sum() > 1:
+                    return False
+                elif (self.grid[:, i] == value).sum() > 1:
+                    return False
+            for i in range(SIZE ** 2):
+                for j in range(SIZE ** 2):
+                    if (self._values_in_box(SIZE * i, SIZE * j) ==
+                            value).sum() > 1:
+                        return False
+        return True
+
     def _related_indeces(self, i, j):
         """ All indeces that will be impacted by changing (i, j). """
         indices = self._indeces_in_box(i, j)
