@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from ..Utils.utils import SIZE, InsolvableError
+from ..Utils.utils import SIZE, UnsolvableError
 from ..Utils.grid import Grid
 
 
@@ -16,7 +16,8 @@ class BacktrackSolver:
         # we keep track of depth at which action was taken
         self.depth = 0
         self.iterations = 0
-        self.unsolvable = None
+        self.unsolvable = 0
+        self.iterations_back = 0  # not to be too long
 
     def solve(self, return_n=0, return_unsolvable=False):
         """ Solve sudoku or return partial results.
@@ -64,6 +65,11 @@ class BacktrackSolver:
             self.grid.fill_cell(*chosen_index, chosen_value)
             self.depth += 1
 
+            if self.iterations_back > 500:
+                if return_n and return_unsolvable:
+                    return 0, 0
+                return 0
+
         if return_n:
             for i in range(min(len(self.history), return_n)):
                 last_action = self.history.pop()
@@ -73,14 +79,13 @@ class BacktrackSolver:
                 return self.unsolvable, self.grid.grid
 
         elif return_unsolvable:
-            if self.unsolvable is not None:
-                return self.unsolvable
-            else:
-                return None
+            return self.unsolvable
 
         return self.grid.grid
 
     def _go_back(self):
+        self.iterations_back += 1
+
         # first, reset forbidden move in future
         if self.depth in self.forbidden_move.keys():
             del self.forbidden_move[self.depth]
@@ -89,7 +94,7 @@ class BacktrackSolver:
         self.depth -= 1
         if self.depth < 0:
             print(self.depth)
-            raise InsolvableError("Your grid is not solvable !")
+            raise UnsolvableError("Your grid is not solvable !")
 
         # add action to forbidden moves
         last_action = self.history.pop()
