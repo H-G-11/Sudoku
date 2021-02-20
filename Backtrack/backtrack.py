@@ -16,6 +16,7 @@ class BacktrackSolver:
         # we keep track of depth at which action was taken
         self.depth = 0
         self.iterations = 0
+        self.unsolvable = None
 
     def solve(self, return_n=0, return_unsolvable=False):
         """ Solve sudoku or return partial results.
@@ -24,14 +25,12 @@ class BacktrackSolver:
         return_n : int -- return (solvable) grid with n 0s.
         return_unsolvable : bool -- return first unsolvable
             sudoku encountered.
-            You can't enter both return_n and return_unsolvable
 
         Output:
         Grid : if return_n specified, partial solution
                if return_unsolvable, unsovable sudoku
                else by default solution.
         """
-        assert return_n == 0 or not return_unsolvable, "Do not specify both"
         while len(self.grid.possibilities) != 0:
             self.iterations += 1
             pos_index = self.grid.index_with_min_pos()
@@ -39,8 +38,9 @@ class BacktrackSolver:
             # if cell with no possibilities, go backward
             if len(self.grid.possibilities[pos_index[0]]) == 0:
                 if return_unsolvable:
-                    print(self.grid.grid)
-                    return self.grid.grid
+                    self.unsolvable = self.grid.grid
+                    if not return_n:
+                        break
                 self._go_back()
                 continue
 
@@ -53,8 +53,9 @@ class BacktrackSolver:
             # if possible actions are forbidden
             if len(pos_actions) == 0:
                 if return_unsolvable:
-                    print(self.grid.grid)
-                    return self.grid.grid
+                    self.unsolvable = self.grid.grid
+                    if not return_n:
+                        break
                 self._go_back()
                 continue
 
@@ -65,7 +66,17 @@ class BacktrackSolver:
 
         if return_n:
             for i in range(min(len(self.history), return_n)):
-                self._go_back()
+                last_action = self.history.pop()
+                index_action = list(last_action.keys())[0]
+                self.grid.erase_cell(*index_action)
+            if return_unsolvable:
+                return self.unsolvable, self.grid.grid
+
+        elif return_unsolvable:
+            if self.unsolvable is not None:
+                return self.unsolvable
+            else:
+                return None
 
         return self.grid.grid
 
