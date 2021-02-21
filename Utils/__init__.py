@@ -1,4 +1,5 @@
-from .utils import PATH_TO_CSV, SIZE, UnsolvableError
-from .grid import Grid
+from .utils import PATH_TO_CSV, SIZE, UnsolvableError, PATH_TO_NETWORK
+from .grid import SmartGrid, Grid
 
-__all__ = ["Grid", "PATH_TO_CSV", "SIZE", "UnsolvableError"]
+__all__ = ["Grid", "SmartGrid", "PATH_TO_CSV", "SIZE", "UnsolvableError",
+           "PATH_TO_NETWORK"]

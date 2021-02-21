@@ -3,10 +3,61 @@ from .utils import SIZE
 
 
 class Grid:
+    """ Implements a minimalist version of a Grid for
+    sudoku. Only a function to fill empty cells and another
+    to check validity of the grid are provided. """
+
     def __init__(self, grid=None):
+        if isinstance(grid, str):
+            grid = np.array([int(i) if i != '.' else 0
+                             for i in grid])
+            grid = grid.reshape((SIZE ** 2, SIZE ** 2))
         self.grid = grid if grid is not None \
             else np.zeros((SIZE ** 2, SIZE ** 2))
-        self.possibilities = {}  # we will have to call pos at least once
+
+    def fill_cell(self, i, j, value):
+        if self.grid[i, j] == 0:
+            self.grid[i, j] = value
+        else:
+            raise ValueError("The cell you are trying to fill is "
+                             "not emply")
+
+    def is_correct(self):
+        for value in range(1, SIZE ** 2 + 1):
+            for i in range(SIZE ** 2):
+                if (self.grid[i, :] == value).sum() > 1:
+                    return False
+                elif (self.grid[:, i] == value).sum() > 1:
+                    return False
+            for i in range(SIZE ** 2):
+                for j in range(SIZE ** 2):
+                    if (self._values_in_box(SIZE * i, SIZE * j) ==
+                            value).sum() > 1:
+                        return False
+        return True
+
+    def is_complete(self):
+        """ Check only completeness not correctness. """
+        return ((self.grid == 0).sum() == 0)
+
+    def copy(self):
+        return Grid(self.grid.copy())
+
+    def _values_in_box(self, i, j):
+        """ All values in the square SIZE * SIZE. """
+        idx_line, idx_col = SIZE * (i // SIZE), SIZE * (j // SIZE)
+        return self.grid[idx_line: idx_line + SIZE,
+                         idx_col: idx_col + SIZE]
+
+
+class SmartGrid(Grid):
+    """ More complete class to represent a Sudoku Grid. The main
+    difference is the calculation and storage of possibilities
+    for each cell, and the possibility to go back. """
+
+    def __init__(self, grid=None):
+        super().__init__(grid)
+        self.possibilities = {}
 
     @classmethod
     def from_grid(cls, grid):
@@ -32,20 +83,6 @@ class Grid:
     def index_with_min_pos(self):
         min_pos = min(self.possibilities.values(), key=len)
         return [k for k, v in self.possibilities.items() if v == min_pos]
-
-    def is_correct(self):
-        for value in range(1, SIZE ** 2 + 1):
-            for i in range(SIZE ** 2):
-                if (self.grid[i, :] == value).sum() > 1:
-                    return False
-                elif (self.grid[:, i] == value).sum() > 1:
-                    return False
-            for i in range(SIZE ** 2):
-                for j in range(SIZE ** 2):
-                    if (self._values_in_box(SIZE * i, SIZE * j) ==
-                            value).sum() > 1:
-                        return False
-        return True
 
     def _related_indeces(self, i, j):
         """ All indeces that will be impacted by changing (i, j). """
@@ -87,9 +124,3 @@ class Grid:
             for j in range(SIZE):
                 indeces.append((idx_line + i, idx_col + j))
         return indeces
-
-    def _values_in_box(self, i, j):
-        """ All values in the square SIZE * SIZE. """
-        idx_line, idx_col = SIZE * (i // SIZE), SIZE * (j // SIZE)
-        return self.grid[idx_line: idx_line + SIZE,
-                         idx_col: idx_col + SIZE]

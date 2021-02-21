@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from ..Utils.utils import SIZE, UnsolvableError
-from ..Utils.grid import Grid
+from ..Utils.grid import SmartGrid
 
 
 class BacktrackSolver:
@@ -10,7 +10,7 @@ class BacktrackSolver:
         """
         forbidden_move : dict of dicts : {depth : {index : [forbidden values]}}
         """
-        self.grid = Grid.from_grid(grid)
+        self.grid = SmartGrid.from_grid(grid)
         self.history = []  # inside : {index: value}
         self.forbidden_move = {}  # move tested that lead to nowhere
         # we keep track of depth at which action was taken
@@ -93,7 +93,6 @@ class BacktrackSolver:
         # go back
         self.depth -= 1
         if self.depth < 0:
-            print(self.depth)
             raise UnsolvableError("Your grid is not solvable !")
 
         # add action to forbidden moves
