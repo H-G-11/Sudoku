@@ -50,7 +50,7 @@ class MCTS:
 
         return best_action
 
-    def search_tree(self, number_path=100):
+    def search_tree(self, number_path=50):
         for path in range(number_path):
             new_grid = self.grid.copy()
             new_grid_history = []
