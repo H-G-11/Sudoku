@@ -65,7 +65,7 @@ class MCTS:
             reward = 0
 
             while (new_grid.is_correct() or not new_grid.is_complete()) \
-                    and reward < self.max_reward:
+                    and reward < self.max_depth:
                 probas_dict = self._predict_probas(new_grid)
                 new_action = self._select(new_action, probas_dict)
                 new_grid = self._take_action(new_grid, new_action)
