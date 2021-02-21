@@ -40,10 +40,13 @@ class MCTS:
         self.verbose = verbose
 
     def run(self):
-        while self.grid.is_correct() or not self.grid.is_complete():
+        while self.grid.is_correct() and not self.grid.is_complete():
             print(self.grid.grid)
             best_action = self.choose_best_action()
-            self.grid.fill_cell(*best_action[0], best_action[1])
+            if best_action is not None:
+                self.grid.fill_cell(*best_action[0], best_action[1])
+            else:
+                break
 
         return self.grid.grid, self.grid.is_correct()
 
@@ -52,9 +55,10 @@ class MCTS:
         # we start again from nothing
         self.N, self.Q, self.W = {}, {}, {}
         self.search_tree()
-        best_action = max(self.N, key=self.N.get)
-
-        return best_action
+        if len(self.N) > 0:
+            best_action = max(self.N, key=self.N.get)
+            return best_action
+        return None
 
     def search_tree(self):
         for path in range(self.number_path):
@@ -64,8 +68,8 @@ class MCTS:
             new_action = 0
             reward = 0
 
-            while (new_grid.is_correct() or not new_grid.is_complete()) \
-                    and reward < self.max_depth:
+            while new_grid.is_correct() and not new_grid.is_complete() \
+                    and (reward < self.max_depth):
                 probas_dict = self._predict_probas(new_grid)
                 new_action = self._select(new_action, probas_dict)
                 new_grid = self._take_action(new_grid, new_action)
@@ -73,11 +77,10 @@ class MCTS:
                 reward += 1
 
             if new_grid.is_complete() and new_grid.is_correct():
-                self.grid.grid = new_grid
-                break
+                self.grid.grid = new_grid  # who knows ?
 
             # backpropagation
-            for action in new_grid_history[:-1]:
+            for action in new_grid_history:
                 self.N[action] = self.N.get(action, 0) + 1
                 self.W[action] = self.W.get(action, 0) + reward
                 self.Q[action] = self.W[action] / self.N[action]
@@ -90,7 +93,7 @@ class MCTS:
         """ Return proba of actions if actions are not in place
         of a cell which is already taken. """
         array_of_proba = self.model.predict(
-            np.array([custom_encoder(self.grid.grid)])
+            np.array([custom_encoder(new_grid.grid)])
             )
         proba_dict = {}
         for i in range(9):
@@ -99,7 +102,9 @@ class MCTS:
                     for v in range(9):
                         proba_dict[((i, j), v + 1)] = \
                             array_of_proba[0, v, i, j]
-
+        if len(proba_dict) == 0:
+            print("Hello")
+            print(new_grid, array_of_proba)
         return proba_dict
 
     def _select(self, parent_action, proba_dict):
