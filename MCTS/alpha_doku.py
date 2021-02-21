@@ -26,14 +26,14 @@ class MCTS:
 
     def __init__(self, grid: Grid, exploration_param=np.sqrt(2),
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
-                 verbose=False, max_path=50, max_depth=50):
+                 verbose=False, number_path=50, max_depth=50):
         """ Action will be stored in the following format:
         ((i, j), value). """
         self.N = {}  # number of times an action has been taken
         self.Q = {}  # mean value of action
         self.W = {}  # total value of action
         self.grid = grid
-        self.max_path = max_path
+        self.number_path = number_path
         self.max_depth = max_depth
         self.exploration_param = exploration_param
         self.model = keras.models.load_model(pathnet)
