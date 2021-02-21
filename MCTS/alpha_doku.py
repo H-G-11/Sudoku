@@ -26,13 +26,15 @@ class MCTS:
 
     def __init__(self, grid: Grid, exploration_param=np.sqrt(2),
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
-                 verbose=False):
+                 verbose=False, max_path=50, max_depth=50):
         """ Action will be stored in the following format:
         ((i, j), value). """
         self.N = {}  # number of times an action has been taken
         self.Q = {}  # mean value of action
         self.W = {}  # total value of action
         self.grid = grid
+        self.max_path = max_path
+        self.max_depth = max_depth
         self.exploration_param = exploration_param
         self.model = keras.models.load_model(pathnet)
         self.verbose = verbose
@@ -54,8 +56,8 @@ class MCTS:
 
         return best_action
 
-    def search_tree(self, number_path=30, max_reward=20):
-        for path in range(number_path):
+    def search_tree(self):
+        for path in range(self.number_path):
             start_time = time.time()
             new_grid = self.grid.copy()
             new_grid_history = []
@@ -63,7 +65,7 @@ class MCTS:
             reward = 0
 
             while (new_grid.is_correct() or not new_grid.is_complete()) \
-                    and reward < max_reward:
+                    and reward < self.max_reward:
                 probas_dict = self._predict_probas(new_grid)
                 new_action = self._select(new_action, probas_dict)
                 new_grid = self._take_action(new_grid, new_action)
