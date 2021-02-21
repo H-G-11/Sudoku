@@ -1,7 +1,8 @@
 import numpy as np
 from tensorflow import keras
-from ..Utils import Grid, PATH_TO_NETWORK
+from ..Utils import Grid
 from .data_transform import custom_encoder
+import time
 
 
 class MCTS:
@@ -23,7 +24,9 @@ class MCTS:
     on 1 million sudoku games, so that the approach is quite the
     same as for alpha Go, in a much simpler setting. """
 
-    def __init__(self, grid: Grid, exploration_param=np.sqrt(2)):
+    def __init__(self, grid: Grid, exploration_param=np.sqrt(2),
+                 pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
+                 verbose=False):
         """ Action will be stored in the following format:
         ((i, j), value). """
         self.N = {}  # number of times an action has been taken
@@ -31,7 +34,8 @@ class MCTS:
         self.W = {}  # total value of action
         self.grid = grid
         self.exploration_param = exploration_param
-        self.model = keras.models.load_model(PATH_TO_NETWORK)
+        self.model = keras.models.load_model(pathnet)
+        self.verbose = verbose
 
     def run(self):
         while self.grid.is_correct() or not self.grid.is_complete():
@@ -50,14 +54,16 @@ class MCTS:
 
         return best_action
 
-    def search_tree(self, number_path=50):
+    def search_tree(self, number_path=30, max_reward=20):
         for path in range(number_path):
+            start_time = time.time()
             new_grid = self.grid.copy()
             new_grid_history = []
             new_action = 0
             reward = 0
 
-            while new_grid.is_correct() or not new_grid.is_complete():
+            while (new_grid.is_correct() or not new_grid.is_complete()) \
+                    and reward < max_reward:
                 probas_dict = self._predict_probas(new_grid)
                 new_action = self._select(new_action, probas_dict)
                 new_grid = self._take_action(new_grid, new_action)
@@ -74,6 +80,9 @@ class MCTS:
                 self.W[action] = self.W.get(action, 0) + reward
                 self.Q[action] = self.W[action] / self.N[action]
                 reward -= 1  # so that last actions receive less
+
+            if self.verbose:
+                print(time.time() - start_time)
 
     def _predict_probas(self, new_grid):
         """ Return proba of actions if actions are not in place
