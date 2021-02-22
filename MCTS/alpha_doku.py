@@ -128,7 +128,7 @@ class MCTS:
 
         Input : dict_action = {"N": N, "Q": Q, "W": W, childs:{}}. """
 
-        sqrt_N = np.sqrt(dict_action.get("N", 0))
+        sqrt_N = np.sqrt(dict_action.get("N", 1))
 
         def upper_confidence_bound(a):
             child_info = dict_action.get("childs", {}).get(a, {})
