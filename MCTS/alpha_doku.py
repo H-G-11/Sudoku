@@ -76,6 +76,9 @@ class MCTS:
                 reward += self.reward_increment
                 dict_action = dict_action.get(new_action, {})
 
+            if self.verbose:
+                print(time.time() - start_time, reward)
+
             if new_grid.is_complete() and new_grid.is_correct():
                 self.grid.grid = new_grid
 
@@ -94,9 +97,6 @@ class MCTS:
                 to_update["W"] = to_update.get("N", 0) + reward
                 to_update["Q"] = to_update["W"] / to_update["N"]
                 reward -= self.reward_increment
-
-            if self.verbose:
-                print(time.time() - start_time, reward)
 
     def _predict_probas(self, new_grid):
         """ Return proba of actions if actions are not in place
