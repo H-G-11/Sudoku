@@ -62,7 +62,8 @@ class SmartGrid(Grid):
     @classmethod
     def from_grid(cls, grid):
         if isinstance(grid, str):
-            grid = np.array([int(i) for i in grid])
+            grid = np.array([int(i) if i != '.' else 0
+                             for i in grid])
             grid = grid.reshape((SIZE ** 2, SIZE ** 2))
         obj = cls(grid)
         obj.possibilities = obj._pos()
@@ -83,6 +84,9 @@ class SmartGrid(Grid):
     def index_with_min_pos(self):
         min_pos = min(self.possibilities.values(), key=len)
         return [k for k, v in self.possibilities.items() if v == min_pos]
+
+    def copy(self):
+        return SmartGrid.from_grid(self.grid.copy())
 
     def _related_indeces(self, i, j):
         """ All indeces that will be impacted by changing (i, j). """
