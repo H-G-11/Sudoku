@@ -77,7 +77,8 @@ class MCTS:
                 dict_action = dict_action.get(new_action, {})
 
             if self.verbose:
-                print(time.time() - start_time, reward)
+                print(time.time() - start_time, reward,
+                      new_grid.grid)
 
             if new_grid.is_complete() and new_grid.is_correct():
                 self.grid.grid = new_grid
