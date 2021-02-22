@@ -113,13 +113,10 @@ class MCTS:
             for j in range(9):
                 if new_grid.grid[i, j] == 0:
                     pos_at_index = new_grid.possibilities[(i, j)]
-                    if len(pos_at_index) == 1:
-                        return {((i, j), pos_at_index[0]): 1}
-                    else:
-                        for v in range(9):
-                            proba_dict[((i, j), v + 1)] = \
-                                array_of_proba[0, v, i, j] * \
-                                len(pos_at_index) / 9
+                    for v in range(9):
+                        proba_dict[((i, j), v + 1)] = \
+                            array_of_proba[0, v, i, j] * \
+                            (1 - len(pos_at_index) / 9)
         if len(proba_dict) == 0:
             print(new_grid, array_of_proba)
         return proba_dict
