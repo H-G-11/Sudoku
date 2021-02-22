@@ -95,7 +95,8 @@ class MCTS:
                     to_update[action] = {}
                 to_update = to_update[action]
                 to_update["N"] = to_update.get("N", 0) + 1
-                to_update["W"] = to_update.get("N", 0) + reward
+                to_update["W"] = to_update.get("W", 0) + reward / \
+                    self.max_depth
                 to_update["Q"] = to_update["W"] / to_update["N"]
                 reward -= self.reward_increment
 
@@ -127,12 +128,13 @@ class MCTS:
 
         Input : dict_action = {"N": N, "Q": Q, "W": W, childs:{}}. """
 
-        sqrt_N = np.sqrt(dict_action.get("N", 1))
+        sqrt_N = np.sqrt(dict_action.get("N", 0))
 
         def upper_confidence_bound(a):
             child_info = dict_action.get("childs", {}).get(a, {})
             return child_info.get("Q", 1) + self.exploration_param * \
-                sqrt_N * proba_dict[a] / (1 + child_info.get("N", 0))
+                sqrt_N * proba_dict[a] / (1 + child_info.get("N", 0)) \
+                + np.random.rand() / 10  # random to encourage exploration
 
         return max(proba_dict, key=upper_confidence_bound)
 
