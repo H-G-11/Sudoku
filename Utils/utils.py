@@ -2,8 +2,7 @@ from tensorflow.keras import layers
 import tensorflow as tf
 
 SIZE = 3
-PATH_TO_CSV = 'C:/Users/Hugues/Desktop/RLProject/sudoku.csv'
-PATH_TO_NETWORK = '../policy_network'
+PATH_TO_CSV = 'C:/Users/Hugues/Desktop/RLProject/sudoku-1m.csv'
 
 
 class SoftmaxMap(layers.Layer):

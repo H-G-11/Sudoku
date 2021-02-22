@@ -1,4 +1,5 @@
 sudoku.csv
+sudoku-1m.csv
 .vscode/
 __pycache__/
 *.png

@@ -82,6 +82,8 @@ class MCTS:
 
             if new_grid.is_complete() and new_grid.is_correct():
                 self.grid.grid = new_grid
+                self.info_action = {}
+                return None
 
             # backpropagation
             for i, action in enumerate(new_grid_history):
