@@ -81,7 +81,7 @@ class MCTS:
                       new_grid.grid)
 
             if new_grid.is_complete() and new_grid.is_correct():
-                self.grid.grid = new_grid
+                self.grid.grid = new_grid.grid
                 self.info_action = {}
                 return None
 
