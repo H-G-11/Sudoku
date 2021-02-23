@@ -1,7 +1,7 @@
 import numpy as np
 from tensorflow import keras
 from ..Utils import Grid
-from ..MCTS import custom_encoder
+from ..alpha_sudoku import custom_encoder
 
 
 class DeepSolver:
@@ -27,9 +27,15 @@ class DeepSolver:
         for i in range(9):
             for j in range(9):
                 if self.grid.grid[i, j] == 0:
+                    pos_at_index = self.grid.possibilities[(i, j)]
+                    if len(pos_at_index) == 1:
+                        proba_dict = {}
+                        proba_dict[((i, j), pos_at_index[0])] = 1
+                        return proba_dict
                     for v in range(9):
                         proba_dict[((i, j), v + 1)] = \
-                            array_of_proba[0, v, i, j]
+                            array_of_proba[0, i, j, v] * \
+                            (1 - len(pos_at_index) / (9 * 3))
 
         return proba_dict
 

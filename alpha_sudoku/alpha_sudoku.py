@@ -5,7 +5,7 @@ from .data_transform import custom_encoder
 import time
 
 
-class MCTS:
+class AlphaSudoku:
     """ Monte Carlo Tree Search for Sudoku game.
 
     For simplicity reason, I won't consider states but just
@@ -113,10 +113,13 @@ class MCTS:
             for j in range(9):
                 if new_grid.grid[i, j] == 0:
                     pos_at_index = new_grid.possibilities[(i, j)]
+                    if len(pos_at_index) == 1:
+                        proba_dict[((i, j), pos_at_index[0])] = 1
+                        return proba_dict
                     for v in range(9):
                         proba_dict[((i, j), v + 1)] = \
-                            array_of_proba[0, v, i, j] * \
-                            (1 - len(pos_at_index) / 9)
+                            array_of_proba[0, i, j, v] * \
+                            (1 - len(pos_at_index) / (9 * 3))
         if len(proba_dict) == 0:
             print(new_grid, array_of_proba)
         return proba_dict
