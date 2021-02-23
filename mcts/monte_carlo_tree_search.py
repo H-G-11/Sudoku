@@ -19,7 +19,6 @@ class MCTS:
 
     def solve(self):
         while not self.sudoku_grid.is_terminal():
-            print(self.sudoku_grid.grid.grid)
             for i in range(self.number_path):
                 self.do_rollout()
             self.sudoku_grid = self.choose_best_action()
