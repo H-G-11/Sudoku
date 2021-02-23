@@ -34,8 +34,7 @@ class DeepSolver:
                         return proba_dict
                     for v in range(9):
                         proba_dict[((i, j), v + 1)] = \
-                            array_of_proba[0, i, j, v] * \
-                            (1 - len(pos_at_index) / (9 * 3))
+                            array_of_proba[0, i, j, v]
 
         return proba_dict
 
