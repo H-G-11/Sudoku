@@ -1,13 +1,12 @@
 from .Utils import PATH_TO_CSV, SmartGrid
-from .deep_iterative_solver import DeepSolver
-import numpy as np
+from .mcts import MCTS, SudokuGrid
 import pandas as pd
 
-NROWS = 10
+NROWS = 3
 data = pd.read_csv(PATH_TO_CSV, nrows=NROWS)
 
 for i in range(NROWS):
-    deep_solver = DeepSolver(SmartGrid.from_grid(data.quizzes[i]))
-    deep_solver.run()
-    print(i, np.array_equal(SmartGrid(data.solutions[i]).grid,
-                            deep_solver.grid.grid))
+    deep_solver = MCTS(SudokuGrid(SmartGrid.from_grid(data.quizzes[i])))
+    deep_solver.solve()
+    print(SmartGrid(data.solutions[i]).grid,
+          deep_solver.sudoku_grid.grid.grid)

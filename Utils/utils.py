@@ -24,3 +24,7 @@ class SoftmaxMap(layers.Layer):
 
 class UnsolvableError(ValueError):
     pass
+
+
+class FillTerminalGrid(ValueError):
+    pass

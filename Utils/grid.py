@@ -76,6 +76,8 @@ class SmartGrid(Grid):
             pos_at_index = self.possibilities.get(index, [])
             if value in pos_at_index:
                 pos_at_index.remove(value)
+            if len(pos_at_index) == 0 and index in self.possibilities:
+                del self.possibilities[index]
 
     def erase_cell(self, i, j):
         self.grid[i, j] = 0
@@ -86,7 +88,9 @@ class SmartGrid(Grid):
         return [k for k, v in self.possibilities.items() if v == min_pos]
 
     def copy(self):
-        return SmartGrid.from_grid(self.grid.copy())
+        new_grid = SmartGrid(self.grid.copy())
+        new_grid.possibilities = self.possibilities.copy()
+        return new_grid
 
     def _related_indeces(self, i, j):
         """ All indeces that will be impacted by changing (i, j). """

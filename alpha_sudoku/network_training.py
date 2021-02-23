@@ -31,19 +31,25 @@ def build_model():
                 activation='tanh')(input)
     x = Concatenate()([x1, x2, x3, x4])
     x = BatchNormalization()(x)
-    x = Conv2D(64, kernel_size=(6, 6), strides=(1, 1), padding='same',
+    x = Conv2D(64, kernel_size=(9, 9), strides=(1, 1), padding='same',
                activation='tanh')(x)
     x = BatchNormalization()(x)
-    x = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same',
+    x = Conv2D(64, kernel_size=(7, 7), strides=(1, 1), padding='same',
                activation='tanh')(x)
     x = BatchNormalization()(x)
-    x = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same',
+    x = Conv2D(64, kernel_size=(5, 5), strides=(1, 1), padding='same',
                activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same',
+    x = Conv2D(32, kernel_size=(5, 5), strides=(1, 1), padding='same',
                activation='relu')(x)
     x = BatchNormalization()(x)
-    x = Conv2D(64, kernel_size=(3, 3), strides=(1, 1), padding='same',
+    x = Conv2D(32, kernel_size=(3, 3), strides=(1, 1), padding='same',
+               activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(32, kernel_size=(3, 3), strides=(1, 1), padding='same',
+               activation='relu')(x)
+    x = BatchNormalization()(x)
+    x = Conv2D(32, kernel_size=(3, 3), strides=(1, 1), padding='same',
                activation='relu')(x)
     x = BatchNormalization()(x)
 
