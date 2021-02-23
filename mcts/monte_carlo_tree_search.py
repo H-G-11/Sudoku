@@ -35,6 +35,12 @@ class MCTS:
                 return -1
             return self.Q.get(n, 0) / self.N[n]
 
+        if len(self.children[self.sudoku_grid]) == 0:
+            if self.sudoku_grid.find_random_child() is not None:
+                return self.sudoku_grid.find_random_child()
+            else:
+                return RuntimeError("Solver failed")
+
         return max(self.children[self.sudoku_grid],
                    key=score)
 
