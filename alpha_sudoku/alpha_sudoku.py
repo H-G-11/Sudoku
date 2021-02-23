@@ -119,7 +119,7 @@ class AlphaSudoku:
                         return proba_dict
                     for v in range(9):
                         proba_dict[((i, j), v + 1)] = \
-                            array_of_proba[0, i, j, v]
+                            array_of_proba[0, v, i, j]
         if len(proba_dict) == 0:
             print(new_grid, array_of_proba)
         return proba_dict
