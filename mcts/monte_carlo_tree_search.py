@@ -1,5 +1,4 @@
 from .sudoku_grid import SudokuGrid
-from ..Utils import FillTerminalGrid
 from math import log, sqrt
 
 # This code is an adaptation of the code here:
@@ -27,7 +26,7 @@ class MCTS:
 
     def choose_best_action(self):
         if self.sudoku_grid.is_terminal():
-            raise FillTerminalGrid()
+            return self.sudoku_grid
 
         if self.sudoku_grid not in self.children:
             return self.sudoku_grid.find_random_child()
@@ -64,6 +63,8 @@ class MCTS:
     def _simulate(self, sudoku_grid):
         while not sudoku_grid.is_terminal():
             sudoku_grid = sudoku_grid.find_random_child()
+        if sudoku_grid.grid.is_complete() and sudoku_grid.grid.is_correct():
+            self.sudoku_grid = sudoku_grid
         return sudoku_grid.reward()
 
     def _expand(self, sudoku_grid):
