@@ -55,7 +55,7 @@ class AlphaSudoku:
         # we start again from nothing
         self.search_tree()
         best_action = max(self.info_action,
-                          key=lambda a: self.info_action[a]["Q"],
+                          key=lambda a: self.info_action[a]["W"],
                           default=None)
         return best_action
 
@@ -114,6 +114,7 @@ class AlphaSudoku:
                 if new_grid.grid[i, j] == 0:
                     pos_at_index = new_grid.possibilities[(i, j)]
                     if len(pos_at_index) == 1:
+                        proba_dict = {}
                         proba_dict[((i, j), pos_at_index[0])] = 1
                         return proba_dict
                     for v in range(9):
