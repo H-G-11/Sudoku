@@ -1,32 +1,38 @@
 import numpy as np
-from tensorflow import keras
-from ..Utils import Grid
-from ..alpha_sudoku import custom_encoder
+from tensorflow.keras.models import load_model
+from ..Utils import SmartGrid, custom_encoder
 
 
 class DeepSolver:
     """ At each step, take action with highest probability. """
 
-    def __init__(self, grid: Grid,
+    def __init__(self, grid,
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network'):
+        if isinstance(grid, np.ndarray):
+            grid = SmartGrid.from_grid(grid.copy())
         self.grid = grid
-        self.model = keras.models.load_model(pathnet)
+        self.model = load_model(pathnet)
 
-    def run(self):
+    def solve(self):
         while not self.grid.is_complete() and self.grid.is_correct():
             proba_dict = self._predict_probas()
+            if proba_dict is None:
+                print("Solver failed")
+                return self.grid.grid
             selected_action = max(proba_dict, key=proba_dict.get)
             self._take_action(selected_action)
         return self.grid.grid
 
     def _predict_probas(self):
         array_of_proba = self.model.predict(
-            np.array([custom_encoder(self.grid.grid)])
+            custom_encoder(self.grid.grid)
             )
         proba_dict = {}
         for i in range(9):
             for j in range(9):
                 if self.grid.grid[i, j] == 0:
+                    if (i, j) not in self.grid.possibilities:
+                        return None
                     pos_at_index = self.grid.possibilities[(i, j)]
                     if len(pos_at_index) == 1:
                         proba_dict = {}

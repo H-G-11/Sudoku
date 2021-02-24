@@ -10,6 +10,8 @@ def custom_encoder(array_of_grids):
     array of dimension (len(arr), 9, 9, 9), with one channel
     for each value from 1 to 9. """
 
+    if len(array_of_grids.shape) == 2:
+        array_of_grids = np.array([array_of_grids])
     shape_encoded = (*array_of_grids.shape, 9)
     encoded = np.zeros(shape_encoded)
     for i, grid in enumerate(array_of_grids):
@@ -18,16 +20,21 @@ def custom_encoder(array_of_grids):
     return encoded
 
 
-def read_transform():
+def read_transform(NROWS=100, encode=False):
+    """ If encode is true, also splits in train test and eval. """
 
-    data = pd.read_csv(PATH_TO_CSV, usecols=["puzzle", "solution"])
+    data = pd.read_csv(PATH_TO_CSV, usecols=["puzzle", "solution"],
+                       nrows=NROWS)
 
     _data_X = data["puzzle"].apply(lambda x: [int(i) if i != '.'
                                               else 0 for i in x])
-    data_X = np.stack(_data_X.to_numpy()).reshape((len(data), 9, 9))
-
     _data_Y = data["solution"].apply(lambda x: [int(i) for i in x])
+
+    data_X = np.stack(_data_X.to_numpy()).reshape((len(data), 9, 9))
     data_Y = np.stack(_data_Y.to_numpy()).reshape((len(data), 9, 9))
+
+    if not encode:
+        return data_X, data_Y
 
     data_X_encoded = custom_encoder(data_X)
     data_Y_encoded = custom_encoder(data_Y)

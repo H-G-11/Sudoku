@@ -1,4 +1,5 @@
 from .sudoku_grid import SudokuGrid
+import numpy as np
 from math import log, sqrt
 
 # This code is an adaptation of the code here:
@@ -8,8 +9,10 @@ from math import log, sqrt
 
 class MCTS:
 
-    def __init__(self, sudoku_grid: SudokuGrid, exploration_weight=1,
+    def __init__(self, sudoku_grid, exploration_weight=1,
                  number_path=10):
+        if isinstance(sudoku_grid, np.ndarray):
+            sudoku_grid = SudokuGrid(sudoku_grid)
         self.sudoku_grid = sudoku_grid
         self.exploration_weight = exploration_weight
         self.Q = {}
@@ -22,6 +25,7 @@ class MCTS:
             for i in range(self.number_path):
                 self.do_rollout()
             self.sudoku_grid = self.choose_best_action()
+        return self.sudoku_grid
 
     def choose_best_action(self):
         if self.sudoku_grid.is_terminal():
