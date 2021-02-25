@@ -1,4 +1,4 @@
-from ..Utils import SmartGrid
+from .grid import SmartGrid
 import random
 import numpy as np
 
@@ -22,23 +22,23 @@ class SudokuGrid:
                 if len(pos[index]) == min_nb_pos_ind:
                     for value in pos[index]:
                         possible_moves.append((index, value))
-            return {self.take_action(a[0], a[1])
-                    for a in possible_moves}
+                    return {self.take_action(a[0], a[1])
+                            for a in possible_moves}
 
     def find_random_child(self):
         pos = self.grid.possibilities
         min_nb_pos_ind = min([len(v) for v in pos.values()])
+        if len(pos) == 0 or min_nb_pos_ind == 0:
+            return None
         pos_considered = []
-        if len(pos) != 0:
-            for k, v in pos.items():
-                # just look at indeces with min pos
-                if len(v) == min_nb_pos_ind:
-                    pos_considered.append(k)
-            index = random.choice(pos_considered)
-            action = random.choice(self.grid.possibilities[index])
-            child = self.take_action(index, action)
-            return child
-        return None
+        for k, v in pos.items():
+            # just look at indeces with min pos
+            if len(v) == min_nb_pos_ind:
+                pos_considered.append(k)
+        index = random.choice(pos_considered)
+        action = random.choice(self.grid.possibilities[index])
+        child = self.take_action(index, action)
+        return child
 
     def take_action(self, index, action):
         new_grid = SudokuGrid(self.grid.grid.copy())
@@ -63,3 +63,6 @@ class SudokuGrid:
         if np.array_equal(self.grid.grid, grid2.grid.grid):
             return True
         return False
+
+    def __str__(self):
+        return str(self.grid.grid)

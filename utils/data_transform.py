@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from ..Utils.utils import PATH_TO_CSV
+from ..utils.utils import PATH_TO_CSV
 
 
 def custom_encoder(array_of_grids):
@@ -13,7 +13,7 @@ def custom_encoder(array_of_grids):
     if len(array_of_grids.shape) == 2:
         array_of_grids = np.array([array_of_grids])
     shape_encoded = (*array_of_grids.shape, 9)
-    encoded = np.zeros(shape_encoded)
+    encoded = np.zeros(shape_encoded, dtype=np.bool)
     for i, grid in enumerate(array_of_grids):
         for value in range(9):
             encoded[i][value] = (grid == value + 1) * 1

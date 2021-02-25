@@ -1,4 +1,4 @@
-from .sudoku_grid import SudokuGrid
+from ..utils import SudokuGrid
 import numpy as np
 from math import log, sqrt
 
@@ -19,6 +19,7 @@ class MCTS:
         self.N = {}
         self.children = {}
         self.number_path = number_path
+        self.iterations = 0
 
     def solve(self):
         while not self.sudoku_grid.is_terminal():
@@ -28,6 +29,7 @@ class MCTS:
         return self.sudoku_grid
 
     def choose_best_action(self):
+        self.iterations += 1
         if self.sudoku_grid.is_terminal():
             return self.sudoku_grid
 
@@ -58,6 +60,7 @@ class MCTS:
     def _select(self, sudoku_grid):
         path = []
         while True:
+            self.iterations += 1
             path.append(sudoku_grid)
             if sudoku_grid not in self.children \
                     or not self.children[sudoku_grid]:
@@ -71,6 +74,7 @@ class MCTS:
 
     def _simulate(self, sudoku_grid):
         while not sudoku_grid.is_terminal():
+            self.iterations += 1
             sudoku_grid = sudoku_grid.find_random_child()
         if sudoku_grid.grid.is_complete() and sudoku_grid.grid.is_correct():
             self.sudoku_grid = sudoku_grid
@@ -79,6 +83,7 @@ class MCTS:
     def _expand(self, sudoku_grid):
         if sudoku_grid in self.children:
             return None
+        self.iterations += 1
         self.children[sudoku_grid] = sudoku_grid.find_children()
 
     def _backpropagate(self, path, reward):

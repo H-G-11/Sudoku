@@ -1,9 +1,9 @@
 import numpy as np
 from tensorflow.keras.models import load_model
-from ..Utils import SmartGrid, custom_encoder
+from ..utils import SmartGrid, custom_encoder
 
 
-class DeepSolver:
+class DeepIterativeSolver:
     """ At each step, take action with highest probability. """
 
     def __init__(self, grid,
@@ -12,6 +12,7 @@ class DeepSolver:
             grid = SmartGrid.from_grid(grid.copy())
         self.grid = grid
         self.model = load_model(pathnet)
+        self.iterations = 0
 
     def solve(self):
         while not self.grid.is_complete() and self.grid.is_correct():
@@ -21,6 +22,7 @@ class DeepSolver:
                 return self.grid.grid
             selected_action = max(proba_dict, key=proba_dict.get)
             self._take_action(selected_action)
+            self.iterations += 1
         return self.grid.grid
 
     def _predict_probas(self):

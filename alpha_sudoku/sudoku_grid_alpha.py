@@ -1,5 +1,4 @@
-from ..mcts import SudokuGrid
-from ..Utils import custom_encoder
+from ..utils import custom_encoder, SudokuGrid
 import numpy as np
 
 

@@ -1,5 +1,5 @@
 from tensorflow.keras import layers
-import tensorflow as tf
+from tensorflow import math, exp
 
 SIZE = 3
 PATH_TO_CSV = 'C:/Users/Hugues/Desktop/RLProject/sudoku.csv'
@@ -14,8 +14,8 @@ class SoftmaxMap(layers.Layer):
         pass
 
     def call(self, x, mask=None):
-        e = tf.exp(x - tf.math.reduce_max(x, axis=self.axis, keepdims=True))
-        s = tf.math.reduce_sum(e, axis=self.axis, keepdims=True)
+        e = exp(x - math.reduce_max(x, axis=self.axis, keepdims=True))
+        s = math.reduce_sum(e, axis=self.axis, keepdims=True)
         return e / s
 
     def get_output_shape_for(self, input_shape):

@@ -1,3 +1,3 @@
-from .deep_iterative_solver import DeepSolver
+from .deep_iterative_solver import DeepIterativeSolver
 
-__all__ = ["DeepSolver"]
+__all__ = ["DeepIterativeSolver"]

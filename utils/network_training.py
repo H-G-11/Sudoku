@@ -1,7 +1,7 @@
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, \
     Concatenate
-from Utils import SoftmaxMap
+from utils import SoftmaxMap
 from .data_transform import read_transform
 
 
