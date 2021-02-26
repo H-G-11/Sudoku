@@ -6,12 +6,14 @@ from ..utils import SmartGrid, custom_encoder
 class DeepIterativeSolver:
     """ At each step, take action with highest probability. """
 
-    def __init__(self, grid,
+    def __init__(self, grid, model=None,
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network'):
         if isinstance(grid, np.ndarray):
             grid = SmartGrid.from_grid(grid.copy())
         self.grid = grid
-        self.model = load_model(pathnet)
+        if model is None:
+            model = load_model(pathnet)
+        self.model = model
         self.iterations = 0
 
     def solve(self):

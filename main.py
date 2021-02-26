@@ -3,10 +3,13 @@ from .backtrack import BacktrackSolver
 from .mcts import MCTS
 from .deep_iterative_solver import DeepIterativeSolver
 from .alpha_sudoku import AlphaSudoku
+from tensorflow.keras.models import load_model
 import time
 
 NROWS = 2
 data_X, data_Y = read_transform(NROWS=NROWS)
+
+model = load_model('C:/Users/Hugues/Desktop/RLProject/policy_network')
 
 for i in range(NROWS):
     print('---------', i)
@@ -26,14 +29,14 @@ for i in range(NROWS):
 
     print('--------- DeepIterativeSolver ')
     start_time = time.time()
-    deep_solver = DeepIterativeSolver(data_X[i])
+    deep_solver = DeepIterativeSolver(data_X[i], model=model)
     deep_solver.solve()
     print(round(time.time() - start_time, 2))
     print(deep_solver.iterations)
 
     print('--------- AlphaSudoku ')
     start_time = time.time()
-    alpha_solver = AlphaSudoku(data_X[i])
+    alpha_solver = AlphaSudoku(data_X[i], model=model)
     alpha_solver.solve()
     print(round(time.time() - start_time, 2))
     print(alpha_solver.iterations)

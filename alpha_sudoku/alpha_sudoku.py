@@ -19,13 +19,15 @@ class AlphaSudoku(MCTS):
 
     def __init__(self, sudoku_grid,
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
-                 exploration_weight=1, number_path=10):
+                 model=None, exploration_weight=1, number_path=10):
+
         """ Sudoku Grid : either SudokuGridAlpha with model initialised,
-        or numpy array. If it is a numpy array, pathnet must be provided
-        and lead to the network. """
+        or numpy array. If it is a numpy array, pathnet or directly model must
+        be provided. """
 
         if isinstance(sudoku_grid, np.ndarray):
-            model = load_model(pathnet)
+            if model is None:
+                model = load_model(pathnet)
             sudoku_grid = SudokuGridAlpha(sudoku_grid, model)
         super().__init__(sudoku_grid, exploration_weight, number_path)
         self.probas = {}
