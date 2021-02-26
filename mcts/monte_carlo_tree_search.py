@@ -26,6 +26,9 @@ class MCTS:
             for i in range(self.number_path):
                 self.do_rollout()
             self.sudoku_grid = self.choose_best_action()
+            if self.iterations > 3000:
+                print("Solver failed")
+                break
         return self.sudoku_grid
 
     def choose_best_action(self):
