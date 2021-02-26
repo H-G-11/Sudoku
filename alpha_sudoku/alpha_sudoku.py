@@ -17,7 +17,7 @@ class AlphaSudoku(MCTS):
     Note : unlike AlphaGo, I keep uct without probabilities to
     balance between exploration and exploitation. """
 
-    def __init__(self, sudoku_grid,
+    def __init__(self, sudoku_grid, max_iterations=10000,
                  pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
                  model=None, exploration_weight=1, number_path=10):
 
@@ -29,5 +29,6 @@ class AlphaSudoku(MCTS):
             if model is None:
                 model = load_model(pathnet)
             sudoku_grid = SudokuGridAlpha(sudoku_grid, model)
-        super().__init__(sudoku_grid, exploration_weight, number_path)
+        super().__init__(sudoku_grid, exploration_weight, number_path,
+                         max_iterations)
         self.probas = {}
