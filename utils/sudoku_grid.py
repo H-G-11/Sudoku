@@ -22,6 +22,7 @@ class SudokuGrid:
                 if len(pos[index]) == min_nb_pos_ind:
                     for value in pos[index]:
                         possible_moves.append((index, value))
+                    # we just return children on 1 cell --> sufficient
                     return {self.take_action(a[0], a[1])
                             for a in possible_moves}
 

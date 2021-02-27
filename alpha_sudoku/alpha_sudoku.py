@@ -32,3 +32,15 @@ class AlphaSudoku(MCTS):
         super().__init__(sudoku_grid, exploration_weight, number_path,
                          max_iterations)
         self.probas = {}
+
+    def _action_selection(self, sudoku_grid):
+        # All children of node should already be expanded:
+        assert all(child in self.children
+                   for child in self.children[sudoku_grid])
+
+        def to_maximise(child):
+            """ Function to minimize described in original alphaGo paper. """
+            return self.Q[child] / self.N[child] + child.proba_taken / \
+                (1 + self.N[child])
+
+        return max(self.children[sudoku_grid], key=to_maximise)

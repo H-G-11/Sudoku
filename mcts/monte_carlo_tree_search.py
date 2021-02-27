@@ -64,17 +64,18 @@ class MCTS:
     def _select(self, sudoku_grid):
         path = []
         while True:
-            self.iterations += 1
             path.append(sudoku_grid)
             if sudoku_grid not in self.children \
                     or not self.children[sudoku_grid]:
+                self.iterations += 1
                 return path
             unexplored = self.children[sudoku_grid] - self.children.keys()
             if unexplored:
-                n = unexplored.pop()
-                path.append(n)
+                child = unexplored.pop()
+                path.append(child)
+                self.iterations += 1
                 return path
-            sudoku_grid = self._uct_select(sudoku_grid)
+            sudoku_grid = self._action_selection(sudoku_grid)
 
     def _simulate(self, sudoku_grid):
         while not sudoku_grid.is_terminal():
@@ -95,7 +96,7 @@ class MCTS:
             self.N[sudoku_grid] = self.N.get(sudoku_grid, 0) + 1
             self.Q[sudoku_grid] = self.Q.get(sudoku_grid, 0) + reward
 
-    def _uct_select(self, sudoku_grid):
+    def _action_selection(self, sudoku_grid):
         # All children of node should already be expanded:
         assert all(child in self.children
                    for child in self.children[sudoku_grid])

@@ -76,8 +76,6 @@ class SmartGrid(Grid):
             pos_at_index = self.possibilities.get(index, [])
             if value in pos_at_index:
                 pos_at_index.remove(value)
-            if len(pos_at_index) == 0 and index in self.possibilities:
-                del self.possibilities[index]
 
     def erase_cell(self, i, j):
         self.grid[i, j] = 0
