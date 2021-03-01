@@ -1,5 +1,6 @@
 sudoku.csv
 sudoku-1m.csv
 .vscode/
+.ipynb_checkpoints
 __pycache__/
 *.png

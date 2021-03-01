@@ -10,7 +10,7 @@ from math import log, sqrt
 class MCTS:
 
     def __init__(self, sudoku_grid, exploration_weight=1,
-                 number_path=10, max_iterations=10000):
+                 max_depth_tree=10, max_iterations=10000):
         if isinstance(sudoku_grid, np.ndarray):
             sudoku_grid = SudokuGrid(sudoku_grid)
         self.sudoku_grid = sudoku_grid
@@ -18,17 +18,18 @@ class MCTS:
         self.Q = {}
         self.N = {}
         self.children = {}
-        self.number_path = number_path
+        self.max_depth_tree = max_depth_tree
         self.iterations = 0
         self.max_iterations = max_iterations
 
     def solve(self):
         while not self.sudoku_grid.is_terminal():
-            for i in range(self.number_path):
+            for i in range(self.max_depth_tree):
                 self.do_rollout()
             self.sudoku_grid = self.choose_best_action()
             if self.iterations > self.max_iterations:
-                print("Solver failed")
+                print("Solver failed, you might want to increase "
+                      "the number of iterations.")
                 break
         return self.sudoku_grid
 

@@ -18,8 +18,8 @@ class AlphaSudoku(MCTS):
     balance between exploration and exploitation. """
 
     def __init__(self, sudoku_grid, max_iterations=10000,
-                 pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network',
-                 model=None, exploration_weight=1, number_path=10):
+                 pathnet='Sudoku/policy_network',
+                 model=None, exploration_weight=1, max_depth_tree=10):
 
         """ Sudoku Grid : either SudokuGridAlpha with model initialised,
         or numpy array. If it is a numpy array, pathnet or directly model must
@@ -29,7 +29,7 @@ class AlphaSudoku(MCTS):
             if model is None:
                 model = load_model(pathnet)
             sudoku_grid = SudokuGridAlpha(sudoku_grid, model)
-        super().__init__(sudoku_grid, exploration_weight, number_path,
+        super().__init__(sudoku_grid, exploration_weight, max_depth_tree,
                          max_iterations)
         self.probas = {}
 

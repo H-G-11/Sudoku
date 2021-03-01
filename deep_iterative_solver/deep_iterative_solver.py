@@ -7,7 +7,7 @@ class DeepIterativeSolver:
     """ At each step, take action with highest probability. """
 
     def __init__(self, grid, model=None,
-                 pathnet='C:/Users/Hugues/Desktop/RLProject/policy_network'):
+                 pathnet='Sudoku/policy_network'):
         if isinstance(grid, np.ndarray):
             grid = SmartGrid.from_grid(grid.copy())
         self.grid = grid

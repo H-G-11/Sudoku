@@ -9,9 +9,9 @@ import time
 NROWS = 2
 data_X, data_Y = read_transform(NROWS=NROWS)
 
-model = load_model('C:/Users/Hugues/Desktop/RLProject/policy_network')
+model = load_model('Sudoku/policy_network')
 
-for i in range(NROWS):
+for i in range(1, NROWS):
     print('---------', i)
     print('--------- Backtrack ')
     start_time = time.time()
@@ -22,7 +22,7 @@ for i in range(NROWS):
 
     print('--------- MCTS ')
     start_time = time.time()
-    mcts_solver = MCTS(data_X[i])
+    mcts_solver = MCTS(data_X[i], max_iterations=1000)
     mcts_solver.solve()
     print(round(time.time() - start_time, 2))
     print(mcts_solver.iterations)

@@ -2,7 +2,7 @@ from tensorflow.keras import layers
 from tensorflow import math, exp
 
 SIZE = 3
-PATH_TO_CSV = 'C:/Users/Hugues/Desktop/RLProject/sudoku.csv'
+PATH_TO_CSV = 'Sudoku/assets/data.csv'
 
 
 class SoftmaxMap(layers.Layer):
