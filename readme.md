@@ -36,10 +36,4 @@ Nonetheless, AlphaSudoku is better in terms of number of iterations (number of d
 
 It would be interesting to test algorithms like AlphaGo Zero or MuZero to create new 16 * 16 Sudoku grids. In fact, in this framework, Backtracking could be very slow, whereas AlphaSudoku seems less impacted by the dimension (even if the number of parameters of the CNN would more important).
 
-So, all in all, I had fun doing this project and I found it interesting to see that Backtracking can be challenged in terms of number of iterations versus accuracy. :)
-
-## How to use ?
-
-You can run the notebook or clone the repository, go to the parent folder and run 
-`python -m Sudoku.main`
-for a quick test.
+So, all in all, I had fun doing this project and I found it interesting to see that Backtracking can be challenged in terms of number of iterations versus accuracy.
